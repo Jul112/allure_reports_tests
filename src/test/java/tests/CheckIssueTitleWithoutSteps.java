@@ -1,6 +1,5 @@
 package tests;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Link;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
@@ -37,18 +37,15 @@ public class CheckIssueTitleWithoutSteps {
         //Открываем главную страницу
         open(BASE_URL);
         //Ищем репозиторий
-        $(".header-search-input").click();
-        $(".header-search-input").sendKeys(REPOSITORY);
-        $(".header-search-input").submit();
+        $(".header-search-input").val(REPOSITORY).submit();
         //Переходим в репозиторий
         $(By.linkText(REPOSITORY)).click();
         //Переходим в раздел Issue
         $(withText(ISSUES)).click();
         //Ищем Issue с заголовком ISSUE_TITLE
-        $(byName("q")).click();
         $(byName("q")).val(ISSUE_TITLE).pressEnter();
         //Проверяем, что в репозитории есть Issue с заголовком ISSUE_TITLE
-        $(withText(ISSUE_TITLE)).shouldBe(Condition.exist);
+        $(withText(ISSUE_TITLE)).shouldBe(exist);
     }
 
 }

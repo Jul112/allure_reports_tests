@@ -1,6 +1,5 @@
 package tests;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.*;
 import io.qameta.allure.selenide.AllureSelenide;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
@@ -41,9 +41,7 @@ public class CheckIssueTitleWithLambdaSteps {
         });
 
         step("Ищем репозиторий" + REPOSITORY, () -> {
-            $(".header-search-input").click();
-            $(".header-search-input").sendKeys(REPOSITORY);
-            $(".header-search-input").submit();
+            $(".header-search-input").val(REPOSITORY).submit();
         });
 
         step("Переходим в репозиторий " + REPOSITORY, () -> {
@@ -55,12 +53,11 @@ public class CheckIssueTitleWithLambdaSteps {
         });
 
         step("Ищем Issue с заголовком " + ISSUE_TITLE, () -> {
-            $(byName("q")).click();
             $(byName("q")).val(ISSUE_TITLE).pressEnter();
         });
 
         step("Проверяем, что в репозитории есть Issue с заголовком " + ISSUE_TITLE, () -> {
-            $(withText(ISSUE_TITLE)).shouldBe(Condition.exist);
+            $(withText(ISSUE_TITLE)).shouldBe(exist);
         });
     }
 }
