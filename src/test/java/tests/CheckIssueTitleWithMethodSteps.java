@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 public class CheckIssueTitleWithMethodSteps {
     private static final String BASE_URL = "https://github.com";
     private static final String REPOSITORY = "allure-framework/allure2";
+    private static final String REPOSITORY_URL = "https://github.com/allure-framework/allure2";
     private static final String ISSUES = "Issues";
     private static final String ISSUE_TITLE = "Debug task";
 
@@ -33,9 +34,9 @@ public class CheckIssueTitleWithMethodSteps {
         SelenideLogger.addListener("allure", new AllureSelenide());
 
         steps.openMainPage();
-        steps.searchRepository(REPOSITORY);
-        steps.openRepository(REPOSITORY);
-        steps.goToIssues(ISSUES);
+        steps.searchRepository(REPOSITORY, REPOSITORY_URL);
+        steps.openRepository(REPOSITORY_URL);
+        steps.goToIssues();
         steps.searchIssueTitle(ISSUE_TITLE);
         steps.checkThatIssueTitleExists(ISSUE_TITLE);
     }

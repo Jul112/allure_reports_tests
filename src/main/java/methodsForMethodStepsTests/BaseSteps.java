@@ -1,14 +1,10 @@
 package methodsForMethodStepsTests;
 
-import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Condition.exist;
-import static com.codeborne.selenide.Selectors.byName;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.withText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class BaseSteps {
     private static final String BASE_URL = "https://github.com";
@@ -16,25 +12,29 @@ public class BaseSteps {
     @Step("Открываем главную страницу")
     public void openMainPage() {
         open(BASE_URL);
+        $("button.btn-green-mktg-fluid").shouldHave(text("Sign up for GitHub"));
     }
     @Step("Ищем репозиторий {repository}")
-    public void searchRepository(final String repository) {
+    public void searchRepository(final String repository, final String repositoryUrl) {
         $(".header-search-input").val(repository).submit();
+        $("ul.repo-list a").shouldHave(attribute("href", repositoryUrl));
     }
     @Step("Переходим в репозиторий {repository}")
-    public void openRepository(final String repository) {
-        $(By.linkText(repository)).click();
+    public void openRepository(final String repositoryUrl) {
+        $$("a").findBy(attribute("href", repositoryUrl)).click();
+        $("h1 strong a").shouldHave(attribute("href", repositoryUrl));
     }
     @Step("Переходим в раздел Issues")
-    public void goToIssues(final String issues) {
-        $(withText(issues)).click();
+    public void goToIssues() {
+        $$("span").findBy(attribute("data-content", "Issues")).click();
+        $("div#repo-content-pjax-container summary.btn-primary").shouldHave(text("New issue"));
     }
     @Step("Ищем Issue с заголовком {issue_title}")
     public void searchIssueTitle(final String issueTitle) {
-        $(byName("q")).val(issueTitle).pressEnter();
+        $("input#js-issues-search").val(issueTitle).pressEnter();
     }
     @Step("Проверяем, что в репозитории есть Issue с заголовком {issue_title}")
     public void checkThatIssueTitleExists(final String issueTitle) {
-        $(withText(issueTitle)).shouldBe(exist);
+        $(withText(issueTitle)).shouldBe(visible);
     }
 }

@@ -10,18 +10,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Condition.exist;
-import static com.codeborne.selenide.Selectors.byName;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.withText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CheckIssueTitleWithoutSteps {
     private static final String BASE_URL = "https://github.com";
     private static final String REPOSITORY = "allure-framework/allure2";
-    private static final String ISSUES = "Issues";
+    private static final String REPOSITORY_URL = "https://github.com/allure-framework/allure2";
     private static final String ISSUE_TITLE = "Debug task";
 
     @Test
@@ -36,16 +33,19 @@ public class CheckIssueTitleWithoutSteps {
         SelenideLogger.addListener("allure", new AllureSelenide());
         //Открываем главную страницу
         open(BASE_URL);
-        //Ищем репозиторий
+        $("button.btn-green-mktg-fluid").shouldHave(text("Sign up for GitHub"));
+       //Ищем репозиторий
         $(".header-search-input").val(REPOSITORY).submit();
+        $("ul.repo-list a").shouldHave(attribute("href", REPOSITORY_URL));
         //Переходим в репозиторий
-        $(By.linkText(REPOSITORY)).click();
+        $$("a").findBy(attribute("href", REPOSITORY_URL)).click();
+        $("h1 strong a").shouldHave(attribute("href", REPOSITORY_URL));
         //Переходим в раздел Issue
-        $(withText(ISSUES)).click();
+        $$("span").findBy(attribute("data-content", "Issues")).click();
+        $("div#repo-content-pjax-container summary.btn-primary").shouldHave(text("New issue"));
         //Ищем Issue с заголовком ISSUE_TITLE
-        $(byName("q")).val(ISSUE_TITLE).pressEnter();
+        $("input#js-issues-search").val(ISSUE_TITLE).pressEnter();
         //Проверяем, что в репозитории есть Issue с заголовком ISSUE_TITLE
-        $(withText(ISSUE_TITLE)).shouldBe(exist);
+        $(withText(ISSUE_TITLE)).shouldBe(visible);
     }
-
 }
