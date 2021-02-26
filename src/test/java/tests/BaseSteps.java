@@ -1,4 +1,4 @@
-package methodsForMethodStepsTests;
+package tests;
 
 import io.qameta.allure.Step;
 
